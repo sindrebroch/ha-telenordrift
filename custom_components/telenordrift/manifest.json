@@ -1,0 +1,16 @@
+{
+  "domain": "telenordrift",
+  "name": "TelenorDrift",
+  "config_flow": true,
+  "documentation": "https://www.github.com/sindrebroch/ha-telenordrift",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@sindrebroch"
+  ],
+  "iot_class": "cloud_polling",
+  "version": "1.0.0"
+}

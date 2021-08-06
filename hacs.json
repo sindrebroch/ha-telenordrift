@@ -1,0 +1,7 @@
+{
+    "name": "telenordrift",
+    "render_readme": true,
+    "domains": ["sensor"],
+    "homeassistant": "2021.6.0",
+    "iot_class": ["Cloud Polling"]
+}
