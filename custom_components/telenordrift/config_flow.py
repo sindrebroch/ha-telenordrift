@@ -17,7 +17,7 @@ from .telenordrift import TelenorDrift
 
 SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_AREA, default="930403700"): str,
+        vol.Required(CONF_AREA): str,
     }
 )
 
