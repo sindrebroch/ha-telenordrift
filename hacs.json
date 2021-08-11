@@ -1,5 +1,5 @@
 {
-    "name": "telenordrift",
+    "name": "Telenor drift",
     "render_readme": true,
     "domains": ["sensor"],
     "homeassistant": "2021.6.0",
