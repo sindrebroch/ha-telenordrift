@@ -2,7 +2,9 @@
   "config": {
     "step": {
       "user": {
-        "data": {}
+        "data": {
+          "area": "Enter area string"
+        }
       }
     },
     "error": {

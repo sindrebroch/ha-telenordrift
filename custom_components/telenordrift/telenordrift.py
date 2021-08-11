@@ -7,11 +7,9 @@ from typing import Optional
 import aiohttp
 from voluptuous.error import Error
 
-from .models import TelenorDriftResponse
 from homeassistant.const import HTTP_OK, HTTP_UNAUTHORIZED
 
-BASE_URL = "https://www.telenor.no/system/service-messages/status/"
-AREA = "930403700"
+from .models import TelenorDriftResponse
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +25,7 @@ class TelenorDrift:
         """Initialize connection with TelenorDrift."""
 
         self._session = session
-        self.area = area
+        self.area: str = area
 
     async def fetch(self) -> TelenorDriftResponse:
         """Fetch data from TelenorDrift."""
@@ -35,8 +33,8 @@ class TelenorDrift:
         if self._session is None:
             raise RuntimeError("Session required")
 
-        URL = f"{BASE_URL}/{AREA}"
-        _LOGGER.debug("Fetching telenordrift URL=%s", URL)
+        URL = f"https://www.telenor.no/system/service-messages/status/{self.area}"
+        _LOGGER.warning("Fetching telenordrift URL=%s", URL)
 
         async with self._session.get(url=URL) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -47,4 +45,5 @@ class TelenorDrift:
 
             data = await resp.json()
 
+        _LOGGER.warning("Response %s", data)
         return TelenorDriftResponse.from_dict(data)

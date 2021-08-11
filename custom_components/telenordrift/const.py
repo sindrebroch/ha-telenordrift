@@ -1,3 +1,5 @@
 """Constants for the TelenorDrift integration."""
 
-DOMAIN = "telenorDrift"
+DOMAIN = "telenordrift"
+
+CONF_AREA = "area"

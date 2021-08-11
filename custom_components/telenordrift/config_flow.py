@@ -1,4 +1,5 @@
-"""Config flow for Pollenvarsel integration."""
+"""Config flow for TelenorDrift integration."""
+
 from __future__ import annotations
 
 import logging
@@ -8,21 +9,23 @@ import aiohttp
 import voluptuous as vol
 
 from homeassistant import config_entries
-from .pollenvarsel import Pollenvarsel
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import AREA_PATH, CONF_AREA, DOMAIN as POLLENVARSEL_DOMAIN
-from .models import Area
+from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN
+from .telenordrift import TelenorDrift
+
+SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_AREA, default="930403700"): str,
+    }
+)
 
 _LOGGER = logging.getLogger(__name__)
 
-AREA_KEYS: list[str] = [area.name for area in AREA_PATH.keys()]
-SCHEMA = vol.Schema({vol.Required(CONF_AREA): vol.In(sorted(AREA_KEYS))})
 
-
-class PollenvarselFlowHandler(config_entries.ConfigFlow, domain=POLLENVARSEL_DOMAIN):
-    """Config flow for Pollenvarsel."""
+class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOMAIN):
+    """Config flow for TelenorDrift."""
 
     VERSION = 1
 
@@ -33,39 +36,35 @@ class PollenvarselFlowHandler(config_entries.ConfigFlow, domain=POLLENVARSEL_DOM
 
         if user_input is not None:
 
-            optional_area: str | None = user_input.get(CONF_AREA)
+            area = user_input[CONF_AREA]
 
-            if optional_area is not None:
+            if await self._async_existing_devices(area):
+                return self.async_abort(reason="already_configured")
 
-                area: Area = Area.from_str(optional_area)
+            session = async_get_clientsession(self.hass)
+            telenordrift = TelenorDrift(area=area, session=session)
 
-                if await self._async_existing_devices(area.name):
-                    return self.async_abort(reason="already_configured")
+            errors: dict[str, Any] = {}
 
-                session = async_get_clientsession(self.hass)
-                pollenvarsel = Pollenvarsel(area=area, session=session)
+            try:
+                await telenordrift.fetch()  # TODO https://www.telenor.no/system/address-search/?q=address
+            except aiohttp.ClientError as error:
+                errors["base"] = "cannot_connect"
+                _LOGGER.warning("error=%s. errors=%s", error, errors)
 
-                errors: dict[str, Any] = {}
-
-                try:
-                    await pollenvarsel.fetch()
-                except aiohttp.ClientError as error:
-                    errors["base"] = "cannot_connect"
-                    _LOGGER.warning("error=%s. errors=%s", error, errors)
-
-                if errors:
-                    return self.async_show_form(
-                        step_id="user", data_schema=SCHEMA, errors=errors
-                    )
-
-                unique_id: str = pollenvarsel.area.name
-                await self.async_set_unique_id(unique_id)
-                self._abort_if_unique_id_configured()
-
-                return self.async_create_entry(
-                    title=unique_id.title(),
-                    data=user_input,
+            if errors:
+                return self.async_show_form(
+                    step_id="user", data_schema=SCHEMA, errors=errors
                 )
+
+            unique_id: str = area
+            await self.async_set_unique_id(unique_id)
+            self._abort_if_unique_id_configured()
+
+            return self.async_create_entry(
+                title=unique_id.title(),
+                data=user_input,
+            )
 
         return self.async_show_form(
             step_id="user",
@@ -76,10 +75,8 @@ class PollenvarselFlowHandler(config_entries.ConfigFlow, domain=POLLENVARSEL_DOM
     async def _async_existing_devices(self, area: str) -> bool:
         """Find existing devices."""
 
-        _LOGGER.warning("current_entries=%s", self._async_current_entries())
         existing_devices = [
             f"{entry.data.get(CONF_AREA)}" for entry in self._async_current_entries()
         ]
-        _LOGGER.warning("existing_devices=%s", existing_devices)
 
         return area in existing_devices

@@ -10,7 +10,9 @@
         },
         "step": {
             "user": {
-                "data": {}
+                "data": {
+                    "area": "Enter area string"
+                }
             }
         }
     }
