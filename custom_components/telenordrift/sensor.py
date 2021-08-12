@@ -17,16 +17,28 @@ from homeassistant.helpers.update_coordinator import (
 from .const import DOMAIN as TELENORDRIFT_DOMAIN
 from .models import TelenorDriftResponse
 
+CONST_TV = "TV"
+CONST_INTERNETT = "INTERNETT"
+CONST_MOBILE = "MOBILE"
+
 SENSORS: Final[Tuple[SensorEntityDescription, ...]] = (
     SensorEntityDescription(
-        key="tv",
+        key=CONST_TV,
         name="TV",
         icon="mdi:television",
+        unit_of_measurement="antall feil",
     ),
     SensorEntityDescription(
-        key="internett",
+        key=CONST_INTERNETT,
         name="Internett",
         icon="mdi:router-wireless",
+        unit_of_measurement="antall feil",
+    ),
+    SensorEntityDescription(
+        key=CONST_MOBILE,
+        name="Mobile",
+        icon="mdi:cellphone",
+        unit_of_measurement="antall feil",
     ),
 )
 
@@ -116,10 +128,12 @@ def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[st
 
     for platform in sensors.platforms:
         if sensor_name in platform.affectedPlatforms:
-            issues.append(platform.description)
+            issues.append(
+                "Ukjent feil" if platform.description is None else platform.description
+            )
 
         for affected in platform.affectedPlatforms:
-            if affected != "tv" and affected != "internett":
+            if affected not in (CONST_TV, CONST_INTERNETT, CONST_MOBILE):
                 _LOGGER.warning("Ukjent platform for telenordrift %s", affected)
 
     return issues

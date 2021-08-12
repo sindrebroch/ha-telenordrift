@@ -1,6 +1,6 @@
 {
   "domain": "telenordrift",
-  "name": "TelenorDrift",
+  "name": "Telenor drift",
   "config_flow": true,
   "documentation": "https://www.github.com/sindrebroch/ha-telenordrift",
   "requirements": [],

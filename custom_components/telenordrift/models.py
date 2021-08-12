@@ -1,6 +1,5 @@
 """Models for TelenorDrift."""
 
-import json
 import logging
 from typing import Any, Dict, List
 
@@ -41,7 +40,7 @@ class TelenorDriftResponse:
         _LOGGER.warning("TelenorDriftResponse from_dict %s", data)
 
         platforms: List[AffectedPlatform] = []
-        for platform in data:
-            platforms.append(AffectedPlatform.from_dict(json.loads(platform)))
+        for platform in data.values():
+            platforms.append(AffectedPlatform.from_dict(platform))
 
         return TelenorDriftResponse(platforms=platforms)
