@@ -34,13 +34,13 @@ class TelenorDriftResponse:
     platforms: List[AffectedPlatform]
 
     @staticmethod
-    def from_dict(data: Dict[str, Any]) -> "TelenorDriftResponse":
+    def from_dict(data: List[Dict[str, Any]]) -> "TelenorDriftResponse":
         """Transform data to dict."""
 
         _LOGGER.warning("TelenorDriftResponse from_dict %s", data)
 
         platforms: List[AffectedPlatform] = []
-        for platform in data.values():
+        for platform in data:
             platforms.append(AffectedPlatform.from_dict(platform))
 
         return TelenorDriftResponse(platforms=platforms)
