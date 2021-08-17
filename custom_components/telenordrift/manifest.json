@@ -3,6 +3,7 @@
   "name": "Telenor drift",
   "config_flow": true,
   "documentation": "https://www.github.com/sindrebroch/ha-telenordrift",
+  "issue_tracker": "https://github.com/sindrebroch/ha-telenordrift/issues",
   "requirements": [],
   "ssdp": [],
   "zeroconf": [],
