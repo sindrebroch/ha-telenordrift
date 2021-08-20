@@ -117,8 +117,8 @@ class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
 def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[str]:
     """Get sensor data."""
 
-    LOGGER.warning("Finding state for %s", sensor_name)
-    LOGGER.warning("%s", sensors)
+    LOGGER.debug("Finding state for %s", sensor_name)
+    LOGGER.debug("%s", sensors)
 
     issues: List[str] = []
 

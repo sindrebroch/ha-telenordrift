@@ -26,8 +26,6 @@ PLATFORMS = ["sensor"]
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the TelenorDrift integration."""
 
-    LOGGER.warning("Async setup")
-
     hass.data[TELENORDRIFT_DOMAIN] = {}
 
     if TELENORDRIFT_DOMAIN in config:
@@ -43,8 +41,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up TelenorDrift from a config entry."""
-
-    LOGGER.warning("Async setup entry")
 
     websession = async_get_clientsession(hass)
     area = entry.data[CONF_AREA]

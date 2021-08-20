@@ -18,7 +18,7 @@ class AffectedPlatform:
     def from_dict(data: Dict[str, Any]) -> "AffectedPlatform":
         """Transform data to dict."""
 
-        LOGGER.warning("AffectedPlatform from_dict %s", data)
+        LOGGER.debug("AffectedPlatform from_dict %s", data)
 
         return AffectedPlatform(
             affectedPlatforms=data["affectedPlatforms"],
@@ -36,7 +36,7 @@ class TelenorDriftResponse:
     def from_dict(data: List[Dict[str, Any]]) -> "TelenorDriftResponse":
         """Transform data to dict."""
 
-        LOGGER.warning("TelenorDriftResponse from_dict %s", data)
+        LOGGER.debug("TelenorDriftResponse from_dict %s", data)
 
         platforms: List[AffectedPlatform] = []
         for platform in data:

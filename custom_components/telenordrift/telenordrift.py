@@ -33,7 +33,7 @@ class TelenorDrift:
             raise RuntimeError("Session required")
 
         URL = f"https://www.telenor.no/system/service-messages/status/{self.area}"
-        LOGGER.warning("Fetching telenordrift URL=%s", URL)
+        LOGGER.debug("Fetching telenordrift URL=%s", URL)
 
         async with self._session.get(url=URL) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -44,5 +44,5 @@ class TelenorDrift:
 
             data = await resp.json()
 
-        LOGGER.warning("Response %s", data)
+        LOGGER.debug("Response %s", data)
         return TelenorDriftResponse.from_dict(data)
