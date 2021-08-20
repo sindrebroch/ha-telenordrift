@@ -1,9 +1,9 @@
 """Constants for the TelenorDrift integration."""
 
-import logging
+from logging import Logger, getLogger
 
 DOMAIN = "telenordrift"
 
 CONF_AREA = "area"
 
-LOGGER: Logger = logging.getLogger(__package__)
+LOGGER: Logger = getLogger(__package__)

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import timedelta
-import logging
 
 from aiohttp.client import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
