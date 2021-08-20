@@ -9,9 +9,8 @@ from voluptuous.error import Error
 
 from homeassistant.const import HTTP_OK, HTTP_UNAUTHORIZED
 
+from .const import LOGGER
 from .models import TelenorDriftResponse
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class TelenorDrift:
@@ -34,7 +33,7 @@ class TelenorDrift:
             raise RuntimeError("Session required")
 
         URL = f"https://www.telenor.no/system/service-messages/status/{self.area}"
-        _LOGGER.warning("Fetching telenordrift URL=%s", URL)
+        LOGGER.warning("Fetching telenordrift URL=%s", URL)
 
         async with self._session.get(url=URL) as resp:
             if resp.status == HTTP_UNAUTHORIZED:
@@ -45,5 +44,5 @@ class TelenorDrift:
 
             data = await resp.json()
 
-        _LOGGER.warning("Response %s", data)
+        LOGGER.warning("Response %s", data)
         return TelenorDriftResponse.from_dict(data)

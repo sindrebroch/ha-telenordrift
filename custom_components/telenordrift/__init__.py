@@ -16,19 +16,17 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN
+from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
 from .models import TelenorDriftResponse
 from .telenordrift import TelenorDrift
 
 PLATFORMS = ["sensor"]
 
-_LOGGER = logging.getLogger(__name__)
-
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the TelenorDrift integration."""
 
-    _LOGGER.warning("Async setup")
+    LOGGER.warning("Async setup")
 
     hass.data[TELENORDRIFT_DOMAIN] = {}
 
@@ -46,7 +44,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up TelenorDrift from a config entry."""
 
-    _LOGGER.warning("Async setup entry")
+    LOGGER.warning("Async setup entry")
 
     websession = async_get_clientsession(hass)
     area = entry.data[CONF_AREA]
@@ -99,7 +97,7 @@ class TelenorDriftDataUpdateCoordinator(DataUpdateCoordinator[TelenorDriftRespon
 
         super().__init__(
             hass,
-            _LOGGER,
+            LOGGER,
             name=TELENORDRIFT_DOMAIN,
             update_interval=update_interval,
         )
@@ -112,7 +110,7 @@ class TelenorDriftDataUpdateCoordinator(DataUpdateCoordinator[TelenorDriftRespon
                 telenordrift = await self.telenordrift.fetch()
 
         except (Error, ClientConnectorError) as error:
-            _LOGGER.error("Update error %s", error)
+            LOGGER.error("Update error %s", error)
             raise UpdateFailed(error) from error
 
         return telenordrift

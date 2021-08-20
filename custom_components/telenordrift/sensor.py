@@ -1,6 +1,5 @@
 """Sensor file for TelenorDrift."""
 
-import logging
 from typing import Final, List, Optional, Tuple, cast
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
@@ -14,7 +13,7 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
-from .const import DOMAIN as TELENORDRIFT_DOMAIN
+from .const import DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
 from .models import TelenorDriftResponse
 
 CONST_TV = "TV"
@@ -41,9 +40,6 @@ SENSORS: Final[Tuple[SensorEntityDescription, ...]] = (
         unit_of_measurement="feil",
     ),
 )
-
-_LOGGER = logging.getLogger(__name__)
-
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -121,8 +117,8 @@ class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
 def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[str]:
     """Get sensor data."""
 
-    _LOGGER.warning("Finding state for %s", sensor_name)
-    _LOGGER.warning("%s", sensors)
+    LOGGER.warning("Finding state for %s", sensor_name)
+    LOGGER.warning("%s", sensors)
 
     issues: List[str] = []
 
@@ -134,6 +130,6 @@ def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[st
 
         for affected in platform.affectedPlatforms:
             if affected not in (CONST_TV, CONST_INTERNETT, CONST_MOBILE):
-                _LOGGER.warning("Ukjent platform for telenordrift %s", affected)
+                LOGGER.warning("Ukjent platform for telenordrift %s", affected)
 
     return issues

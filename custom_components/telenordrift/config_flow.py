@@ -12,7 +12,7 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN
+from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
 from .telenordrift import TelenorDrift
 
 SCHEMA = vol.Schema(
@@ -20,9 +20,6 @@ SCHEMA = vol.Schema(
         vol.Required(CONF_AREA): str,
     }
 )
-
-_LOGGER = logging.getLogger(__name__)
-
 
 class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOMAIN):
     """Config flow for TelenorDrift."""
@@ -50,7 +47,7 @@ class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOM
                 await telenordrift.fetch()  # TODO https://www.telenor.no/system/address-search/?q=address
             except aiohttp.ClientError as error:
                 errors["base"] = "cannot_connect"
-                _LOGGER.warning("error=%s. errors=%s", error, errors)
+                LOGGER.warning("error=%s. errors=%s", error, errors)
 
             if errors:
                 return self.async_show_form(

@@ -5,8 +5,7 @@ from typing import Any, Dict, List
 
 import attr
 
-_LOGGER = logging.getLogger(__name__)
-
+from .const import LOGGER
 
 @attr.s(auto_attribs=True, frozen=True)
 class AffectedPlatform:
@@ -19,7 +18,7 @@ class AffectedPlatform:
     def from_dict(data: Dict[str, Any]) -> "AffectedPlatform":
         """Transform data to dict."""
 
-        _LOGGER.warning("AffectedPlatform from_dict %s", data)
+        LOGGER.warning("AffectedPlatform from_dict %s", data)
 
         return AffectedPlatform(
             affectedPlatforms=data["affectedPlatforms"],
@@ -37,7 +36,7 @@ class TelenorDriftResponse:
     def from_dict(data: List[Dict[str, Any]]) -> "TelenorDriftResponse":
         """Transform data to dict."""
 
-        _LOGGER.warning("TelenorDriftResponse from_dict %s", data)
+        LOGGER.warning("TelenorDriftResponse from_dict %s", data)
 
         platforms: List[AffectedPlatform] = []
         for platform in data:
