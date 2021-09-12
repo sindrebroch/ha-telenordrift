@@ -48,8 +48,7 @@ async def async_setup_entry(
     coordinator: TelenorDriftDataUpdateCoordinator = hass.data[TELENORDRIFT_DOMAIN][entry.entry_id]
 
     for sensor_description in SENSORS:
-        async_add_entities(TelenorDriftSensor(coordinator, sensor_description))
-
+        async_add_entities([TelenorDriftSensor(coordinator, sensor_description)])
 
 class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
     """Define a TelenorDrift entity."""
