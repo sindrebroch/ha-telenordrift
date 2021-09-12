@@ -11,8 +11,8 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
+from .api import TelenorDriftApiClient
 from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
-from .telenordrift import TelenorDrift
 
 SCHEMA = vol.Schema(
     {
@@ -34,16 +34,16 @@ class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOM
 
             area = user_input[CONF_AREA]
 
-            if await self._async_existing_devices(area):
-                return self.async_abort(reason="already_configured")
+            await self.async_set_unique_id(area)
+            self._abort_if_unique_id_configured()
 
             session = async_get_clientsession(self.hass)
-            telenordrift = TelenorDrift(area=area, session=session)
+            api = TelenorDriftApiClient(area=area, session=session)
 
             errors: dict[str, Any] = {}
 
             try:
-                await telenordrift.fetch()  # TODO https://www.telenor.no/system/address-search/?q=address
+                await api.fetch()  # TODO https://www.telenor.no/system/address-search/?q=address
             except aiohttp.ClientError as error:
                 errors["base"] = "cannot_connect"
                 LOGGER.warning("error=%s. errors=%s", error, errors)
@@ -53,12 +53,8 @@ class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOM
                     step_id="user", data_schema=SCHEMA, errors=errors
                 )
 
-            unique_id: str = area
-            await self.async_set_unique_id(unique_id)
-            self._abort_if_unique_id_configured()
-
             return self.async_create_entry(
-                title=unique_id.title(),
+                title=area.title(),
                 data=user_input,
             )
 
@@ -67,12 +63,3 @@ class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOM
             data_schema=SCHEMA,
             errors={},
         )
-
-    async def _async_existing_devices(self, area: str) -> bool:
-        """Find existing devices."""
-
-        existing_devices = [
-            f"{entry.data.get(CONF_AREA)}" for entry in self._async_current_entries()
-        ]
-
-        return area in existing_devices

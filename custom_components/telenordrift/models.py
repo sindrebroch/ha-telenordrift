@@ -6,7 +6,7 @@ import attr
 
 from .const import LOGGER
 
-@attr.s(auto_attribs=True, frozen=True)
+@attr.s(auto_attribs=True)
 class AffectedPlatform:
     """Class representing AffectedPlatform."""
 
@@ -17,7 +17,7 @@ class AffectedPlatform:
     def from_dict(data: Dict[str, Any]) -> "AffectedPlatform":
         """Transform data to dict."""
 
-        LOGGER.debug("AffectedPlatform from_dict %s", data)
+        LOGGER.debug("AffectedPlatform=%s", data)
 
         return AffectedPlatform(
             affectedPlatforms=data["affectedPlatforms"],
@@ -25,7 +25,7 @@ class AffectedPlatform:
         )
 
 
-@attr.s(auto_attribs=True, frozen=True)
+@attr.s(auto_attribs=True)
 class TelenorDriftResponse:
     """Class representing TelenorDrift."""
 
@@ -35,7 +35,7 @@ class TelenorDriftResponse:
     def from_dict(data: List[Dict[str, Any]]) -> "TelenorDriftResponse":
         """Transform data to dict."""
 
-        LOGGER.debug("TelenorDriftResponse from_dict %s", data)
+        LOGGER.debug("TelenorDriftResponse=%s", data)
 
         platforms: List[AffectedPlatform] = []
         for platform in data:

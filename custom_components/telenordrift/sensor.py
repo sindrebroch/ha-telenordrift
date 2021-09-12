@@ -1,26 +1,23 @@
 """Sensor file for TelenorDrift."""
 
-from typing import Final, List, Optional, Tuple, cast
+from typing import List, cast
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
-)
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
+from .coordinator import TelenorDriftDataUpdateCoordinator
 from .models import TelenorDriftResponse
 
 CONST_TV = "TV"
 CONST_INTERNETT = "INTERNETT"
 CONST_MOBILE = "MOBILE"
 
-SENSORS: Final[Tuple[SensorEntityDescription, ...]] = (
+SENSORS: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
         key=CONST_TV,
         name="TV",
@@ -48,56 +45,41 @@ async def async_setup_entry(
 ) -> None:
     """Add TelenorDrift entities from a config_entry."""
 
-    coordinator: DataUpdateCoordinator = hass.data[TELENORDRIFT_DOMAIN][entry.entry_id]
+    coordinator: TelenorDriftDataUpdateCoordinator = hass.data[TELENORDRIFT_DOMAIN][entry.entry_id]
 
     for sensor_description in SENSORS:
         async_add_entities(TelenorDriftSensor(coordinator, sensor_description))
 
 
-
 class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
     """Define a TelenorDrift entity."""
 
+    coordinator: TelenorDriftDataUpdateCoordinator
+
     def __init__(
         self,
-        coordinator: DataUpdateCoordinator,
+        coordinator: TelenorDriftDataUpdateCoordinator,
         description: SensorEntityDescription,
     ) -> None:
         """Initialize."""
 
         super().__init__(coordinator)
 
+        self.coordinator = coordinator
         self.entity_description = description
-
         self.sensor_data: List[str] = _get_sensor_data(
             coordinator.data, description.key
         )
 
-        self._attr_name = f"{description.name}"
         self._attr_unique_id = f"{description.key}"
+        self._attr_device_info = coordinator._attr_device_info
+        self._attr_extra_state_attributes = {"issues": self.sensor_data}
 
     @property
-    def state(self) -> StateType:
+    def native_value(self) -> StateType:
         """Return the state."""
 
         return cast(StateType, len(self.sensor_data))
-
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-
-        return {"issues": self.sensor_data}
-
-    @property
-    def device_info(self) -> Optional[DeviceInfo]:
-        """Return the device info."""
-
-        return {
-            "identifiers": {(TELENORDRIFT_DOMAIN, "telenordrift")},
-            "name": "TelenorDrift",
-            "model": "TelenorDrift",
-            "manufacturer": "TelenorDrift",
-        }
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -120,7 +102,7 @@ def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[st
     for platform in sensors.platforms:
         if sensor_name in platform.affectedPlatforms:
             issues.append(
-                "Ukjent feil" if platform.description is None else platform.description
+                "Ingen beskrivelse" if platform.description is None else platform.description
             )
 
         for affected in platform.affectedPlatforms:

@@ -2,8 +2,10 @@
 
 from logging import Logger, getLogger
 
+LOGGER: Logger = getLogger(__package__)
+
 DOMAIN = "telenordrift"
 
-CONF_AREA = "area"
+PLATFORMS = ["sensor"]
 
-LOGGER: Logger = getLogger(__package__)
+CONF_AREA = "area"
