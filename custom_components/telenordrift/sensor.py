@@ -25,19 +25,19 @@ SENSORS: Final[Tuple[SensorEntityDescription, ...]] = (
         key=CONST_TV,
         name="TV",
         icon="mdi:television",
-        unit_of_measurement="feil",
+        native_unit_of_measurement="feil",
     ),
     SensorEntityDescription(
         key=CONST_INTERNETT,
         name="Internett",
         icon="mdi:router-wireless",
-        unit_of_measurement="feil",
+        native_unit_of_measurement="feil",
     ),
     SensorEntityDescription(
         key=CONST_MOBILE,
         name="Mobile",
         icon="mdi:cellphone",
-        unit_of_measurement="feil",
+        native_unit_of_measurement="feil",
     ),
 )
 
