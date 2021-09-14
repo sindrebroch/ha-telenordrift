@@ -1,7 +1,5 @@
 # TelenorDrift for HomeAssistant
 
-WIP
-
 HomeAssistant-integration for TelenorDrift
 
 ## Installation
@@ -25,5 +23,15 @@ HomeAssistant-integration for TelenorDrift
 4. Configure the `TelenorDrift`-integration.
 
 ## Todo
+- [ ] Easier way to add your area-code
+- [ ] Rewrite API-logic
+- [ ] Configurable polling-interval
 
 ## Features
+### Sensors
+- TV
+- Internet
+- Mobile
+
+The sensors represent the number of current issues for your area. They also have an "issues"-attribute which contains the descriptions of the issues (if it exists in the API).
+
