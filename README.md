@@ -22,6 +22,11 @@ HomeAssistant-integration for TelenorDrift
 3. Restart Home Assistant.
 4. Configure the `TelenorDrift`-integration.
 
+## Configuration
+- Search your address at https://www.telenor.no/driftsmeldinger/
+- You are redirected to a page with the url: https://www.telenor.no/driftsmeldinger/sok/ **"area-id"**
+- Use this area-id when configuring the integration in HA
+
 ## Todo
 - [ ] Easier way to add your area-code
 - [ ] Rewrite API-logic
