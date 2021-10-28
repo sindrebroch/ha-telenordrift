@@ -30,12 +30,13 @@ class TelenorDriftDataUpdateCoordinator(DataUpdateCoordinator[TelenorDriftRespon
         self.area: str = area
         self.api = TelenorDriftApiClient(area=area, session=session)
 
-        self._attr_device_info: DeviceInfo = {
-            "name": "TelenorDrift",
-            "manufacturer": "TelenorDrift",
-            "model": "TelenorDrift",
-            "identifiers": {(TELENORDRIFT_DOMAIN, "telenordrift")},
-        }
+        self._attr_device_info = DeviceInfo(
+            name="TelenorDrift",
+            manufacturer="TelenorDrift",
+            model="TelenorDrift",
+            identifiers={(TELENORDRIFT_DOMAIN, "telenordrift")},
+            configuration_url="https://www.telenor.no/driftsmeldinger/",
+        )
 
         super().__init__(
             hass,
