@@ -16,6 +16,7 @@ from .models import TelenorDriftResponse
 CONST_TV = "TV"
 CONST_INTERNETT = "INTERNETT"
 CONST_MOBILE = "MOBILE"
+CONST_DATA = "DATA"
 
 SENSORS: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
@@ -34,6 +35,12 @@ SENSORS: tuple[SensorEntityDescription, ...] = (
         key=CONST_MOBILE,
         name="Mobile",
         icon="mdi:cellphone",
+        native_unit_of_measurement="feil",
+    ),
+    SensorEntityDescription(
+        key=CONST_DATA,
+        name="Data",
+        icon="mdi:database",
         native_unit_of_measurement="feil",
     ),
 )
@@ -93,8 +100,8 @@ class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
 def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[str]:
     """Get sensor data."""
 
+    LOGGER.debug("sensors=%s", sensors)
     LOGGER.debug("Finding state for %s", sensor_name)
-    LOGGER.debug("%s", sensors)
 
     issues: List[str] = []
 
@@ -105,7 +112,8 @@ def _get_sensor_data(sensors: TelenorDriftResponse, sensor_name: str) -> List[st
             )
 
         for affected in platform.affectedPlatforms:
-            if affected not in (CONST_TV, CONST_INTERNETT, CONST_MOBILE):
+            if affected not in (CONST_TV, CONST_INTERNETT, CONST_MOBILE, CONST_DATA):
                 LOGGER.warning("Ukjent platform for telenordrift %s", affected)
 
+    LOGGER.debug("issues=%s", issues)
     return issues
