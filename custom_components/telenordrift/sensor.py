@@ -78,7 +78,8 @@ class TelenorDriftSensor(CoordinatorEntity, SensorEntity):
             coordinator.data, description.key
         )
 
-        self._attr_unique_id = f"{description.key}"
+        self._attr_name = f"{description.name} issues"
+        self._attr_unique_id = f"{description.key}_issues"
         self._attr_device_info = coordinator._attr_device_info
         self._attr_extra_state_attributes = {"issues": self.sensor_data}
 
