@@ -63,7 +63,7 @@ class TelenorDriftApiClient:
         LOGGER.debug("%s-request to url=%s.", method, url)
 
         try:
-            async with async_timeout.timeout(10, loop=asyncio.get_event_loop()):
+            async with async_timeout.timeout(10):
                 response = await self._session.request(method=method, url=url)
                 return await response.json()
         except asyncio.TimeoutError as exception:
