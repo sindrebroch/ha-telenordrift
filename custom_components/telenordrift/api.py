@@ -1,5 +1,6 @@
 """TelenorDrift library."""
 
+from http import HTTPStatus
 import json
 from typing import Any, Optional
 
@@ -8,8 +9,6 @@ import asyncio
 import aiohttp
 import async_timeout
 from voluptuous.error import Error
-
-from homeassistant.const import HTTP_OK, HTTP_UNAUTHORIZED
 
 from .const import LOGGER
 from .models import TelenorDriftResponse
@@ -42,9 +41,9 @@ class TelenorDriftApiClient:
         LOGGER.debug("Fetching telenordrift URL=%s", URL)
 
         async with self._session.get(url=URL) as resp:
-            if resp.status == HTTP_UNAUTHORIZED:
+            if resp.status == HTTPStatus.UNAUTHORIZED:
                 raise Error(f"Unauthorized. {resp.status}")
-            if resp.status != HTTP_OK:
+            if resp.status != HTTPStatus.OK:
                 error_text = json.loads(await resp.text())
                 raise Error(f"Not OK {resp.status} {error_text}")
 
