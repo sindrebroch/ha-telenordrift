@@ -33,7 +33,7 @@ HomeAssistant-integration for TelenorDrift
 - Use this area-id when configuring the integration in HA
 
 ## Todo
-- [ ] Easier way to add your area-code
+- [ ] Easier way to add your area-code (i.e. call https://www.telenor.no/api/address-search/?q=address)
 - [ ] Rewrite API-logic
 - [ ] Configurable polling-interval
 
