@@ -36,6 +36,7 @@ HomeAssistant-integration for TelenorDrift
 - [ ] Easier way to add your area-code (i.e. call https://www.telenor.no/api/address-search/?q=address)
 - [ ] Rewrite API-logic
 - [ ] Configurable polling-interval
+- [ ] Add ?postCode=<postCode> to fix issue
 
 ## Features
 ### Sensors
