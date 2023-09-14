@@ -12,11 +12,12 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import TelenorDriftApiClient
-from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
+from .const import CONF_AREA, CONF_POSTCODE, DOMAIN as TELENORDRIFT_DOMAIN, LOGGER
 
 SCHEMA = vol.Schema(
     {
         vol.Required(CONF_AREA): str,
+        vol.Required(CONF_POSTCODE): str
     }
 )
 
@@ -33,12 +34,13 @@ class TelenorDriftFlowHandler(config_entries.ConfigFlow, domain=TELENORDRIFT_DOM
         if user_input is not None:
 
             area = user_input[CONF_AREA]
+            postCode = user_input[CONF_POSTCODE]
 
             await self.async_set_unique_id(area)
             self._abort_if_unique_id_configured()
 
             session = async_get_clientsession(self.hass)
-            api = TelenorDriftApiClient(area=area, session=session)
+            api = TelenorDriftApiClient(area=area, postCode=postCode, session=session)
 
             errors: dict[str, Any] = {}
 

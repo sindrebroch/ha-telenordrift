@@ -9,3 +9,4 @@ DOMAIN = "telenordrift"
 PLATFORMS = ["sensor"]
 
 CONF_AREA = "area"
+CONF_POSTCODE = "postCode"

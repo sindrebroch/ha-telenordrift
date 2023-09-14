@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import CONF_AREA, DOMAIN as TELENORDRIFT_DOMAIN, PLATFORMS
+from .const import CONF_AREA, CONF_POSTCODE, DOMAIN as TELENORDRIFT_DOMAIN, PLATFORMS
 from .coordinator import TelenorDriftDataUpdateCoordinator
 
 
@@ -16,9 +16,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(TELENORDRIFT_DOMAIN, {})
 
     coordinator = TelenorDriftDataUpdateCoordinator(
-        hass, 
-        async_get_clientsession(hass), 
+        hass,
+        async_get_clientsession(hass),
         entry.data[CONF_AREA],
+        entry.data[CONF_POSTCODE]
     )
 
     await coordinator.async_config_entry_first_refresh()

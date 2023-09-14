@@ -22,13 +22,15 @@ class TelenorDriftDataUpdateCoordinator(DataUpdateCoordinator[TelenorDriftRespon
         hass: HomeAssistant,
         session: ClientSession,
         area: str,
+        postCode: str,
     ) -> None:
         """Initialize."""
 
         update_interval = timedelta(minutes=60)
 
         self.area: str = area
-        self.api = TelenorDriftApiClient(area=area, session=session)
+        self.postCode: str = postCode
+        self.api = TelenorDriftApiClient(area=area, postCode=postCode, session=session)
 
         self._attr_device_info = DeviceInfo(
             name="TelenorDrift",

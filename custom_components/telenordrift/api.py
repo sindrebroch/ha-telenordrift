@@ -24,12 +24,14 @@ class TelenorDriftApiClient:
     def __init__(
         self,
         area: str,
+        postCode: str,
         session: Optional[aiohttp.client.ClientSession] = None,
     ) -> None:
         """Initialize connection with TelenorDrift."""
 
         self._session = session
         self.area: str = area
+        self.postCode: str = postCode
 
     async def fetch(self) -> TelenorDriftResponse:
         """Fetch data from TelenorDrift."""
@@ -37,7 +39,7 @@ class TelenorDriftApiClient:
         if self._session is None:
             raise RuntimeError("Session required")
 
-        URL = f"https://www.telenor.no/system/service-messages/status/{self.area}"
+        URL = f"https://www.telenor.no/api/service-messages/status/{self.area}?postCode={self.postCode}"
         LOGGER.debug("Fetching telenordrift URL=%s", URL)
 
         async with self._session.get(url=URL) as resp:
